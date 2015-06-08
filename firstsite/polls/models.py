@@ -5,10 +5,14 @@ from django.utils import timezone
 class Question(models.Model):
 	question_text = models.CharField(max_length=200)
 	pub_date = models.DateTimeField('date published')
+	
 	def __str__(self):
 		return self.question_text
 	def wasPublishedRecently(self):
-		return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
+		return timezone.now() - datetime.timedelta(days=1) <= self.pub_date <= timezone.now()
+	wasPublishedRecently.admin_order_field = 'pub_date'
+	wasPublishedRecently.boolean = True
+	wasPublishedRecently.short_description = 'Published recently?'
 
 class Choice(models.Model):
 	quesition = models.ForeignKey(Question)
